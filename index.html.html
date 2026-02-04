@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Galentine’s 💕</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: url("bg-envelope.jpg") center/cover no-repeat;
+      font-family: 'Georgia', serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Glitter */
+    .glitter { position: absolute; width:100%; height:100%; pointer-events:none; z-index:0; }
+    .particle { position:absolute; width:4px; height:4px; background:#fff; border-radius:50%; opacity:0.8; animation: glitterMove linear infinite; }
+    @keyframes glitterMove {0%{transform:translateY(0) translateX(0);opacity:0.8;}100%{transform:translateY(-600px) translateX(100px);opacity:0;}}
+
+    /* Envelope */
+    #envelope-container { position: relative; cursor: pointer; z-index:1; }
+    #envelope { width:300px; display:block; }
+    #envelope-flap { width:300px; position:absolute; top:0; left:0; transform-origin: top center; z-index:2; }
+
+    /* Flap animation */
+    .open-flap { animation: flapOpen 1s forwards; }
+    @keyframes flapOpen { 0% { transform: rotateX(0deg);} 100% { transform: rotateX(-180deg);} }
+
+    /* Letter */
+    #letter { display:none; background:url("letter-bg.png") center/cover no-repeat; border-radius:25px; padding:50px; width:80%; max-width:800px; box-shadow:0 0 50px rgba(255,20,147,0.7); position:relative; text-align:center; z-index:3; font-family:'Pacifico',cursive; color:#d63384; }
+
+    #letter h1 { margin-bottom:20px; font-size:2.5em; }
+    #letter p { font-size:1.3em; line-height:1.5em; }
+
+    /* Side images in polaroid style */
+    .side-img { position:absolute; top:50%; width:120px; transform:translateY(-50%); border:5px solid white; box-shadow:0 5px 15px rgba(255,0,150,0.5); border-radius:10px; }
+    #left { left:-180px; }
+    #right { right:-160px; }
+
+    /* Floating hearts */
+    .heart { position:absolute; width:20px; height:20px; background:red; transform:rotate(45deg); animation: floatUp linear infinite; opacity:0.8; z-index:0; }
+    .heart:before, .heart:after { content:''; position:absolute; width:20px; height:20px; background:red; border-radius:50%; }
+    .heart:before{top:-10px; left:0;} .heart:after{left:10px; top:0;}
+    @keyframes floatUp {0%{transform:translateY(0) rotate(45deg); opacity:0.8;}100%{transform:translateY(-600px) rotate(45deg); opacity:0;}}
+  </style>
+</head>
+
+<body>
+  <div class="glitter" id="glitter"></div>
+
+  <!-- Envelope container -->
+  <div id="envelope-container">
+    <img src="envelope.png" id="envelope">
+    <img src="envelope-flap.png" id="envelope-flap">
+  </div>
+
+  <!-- Letter -->
+  <div id="letter">
+    <img class="side-img" id="left" src="left1.jpg">
+    <img class="side-img" id="right" src="right1.jpg">
+    <h1>Happy Galentine’s 💕</h1>
+    <p>To my favorite girls 💖<br><br>This day is all about love, laughter, pink vibes, and celebrating us ✨💌</p>
+  </div>
+
+  <!-- Music -->
+  <audio id="music" src="song.mp3"></audio>
+
+  <script>
+    const container = document.getElementById("envelope-container");
+    const flap = document.getElementById("envelope-flap");
+    const letter = document.getElementById("letter");
+    const music = document.getElementById("music");
+
+    container.onclick = () => {
+      flap.classList.add("open-flap"); // animate flap
+      setTimeout(() => {
+        letter.style.display = "block"; // show letter after flap opens
+        music.play();
+        createHearts(10);
+      }, 1000); // wait for flap animation
+    };
+
+    // Left & right images
+    const leftImages = ["left1.jpg","left2.jpg","left3.jpg","left4.jpg","left5.jpg","left6.jpg","left7.jpg","left8.jpg","left9.jpg","left10.jpg","left11.jpg","left12.jpg","left13.jpg"];
+    const rightImages = ["right1.jpg","right2.jpg","right3.jpg","right4.jpg","right5.jpg","right6.jpg","right7.jpg","right8.jpg","right9.jpg","right10.jpg","right11.jpg"];
+
+    let leftIndex=0; let rightIndex=0;
+    setInterval(()=>{leftIndex=(leftIndex+1)%leftImages.length; document.getElementById("left").src = leftImages[leftIndex];},2000);
+    setInterval(()=>{rightIndex=(rightIndex+1)%rightImages.length; document.getElementById("right").src = rightImages[rightIndex];},2000);
+
+    // Glitter particles
+    const glitter = document.getElementById("glitter");
+    for(let i=0;i<50;i++){
+      const p=document.createElement("div");
+      p.classList.add("particle");
+      p.style.left=Math.random()*100+"%";
+      p.style.top=Math.random()*100+"%";
+      p.style.width=Math.random()*3+2+"px";
+      p.style.height=p.style.width;
+      p.style.animationDuration=2+Math.random()*3+"s";
+      glitter.appendChild(p);
+    }
+
+    // Hearts
+    function createHearts(num){
+      for(let i=0;i<num;i++){
+        const heart=document.createElement("div");
+        heart.className="heart";
+        heart.style.left=Math.random()*90+"%";
+        heart.style.width=(10+Math.random()*20)+"px";
+        heart.style.height=heart.style.width;
+        heart.style.animationDuration=(3+Math.random()*3)+"s";
+        document.body.appendChild(heart);
+        setTimeout(()=>heart.remove(),5000);
+      }
+      setInterval(()=>{
+        const heart=document.createElement("div");
+        heart.className="heart";
+        heart.style.left=Math.random()*90+"%";
+        heart.style.width=(10+Math.random()*20)+"px";
+        heart.style.height=heart.style.width;
+        heart.style.animationDuration=(3+Math.random()*3)+"s";
+        document.body.appendChild(heart);
+        setTimeout(()=>heart.remove(),5000);
+      },1000);
+    }
+  </script>
+</body>
+</html>
